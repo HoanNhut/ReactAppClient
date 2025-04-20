@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-ro
 import { Button, Container, Navbar, Nav, Row, Col } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AddBook from "./components/AddBook";
-import {BookDetail} from "./components/BookDetail";
+import { BookDetail } from "./components/BookDetail";
 import EditBook from "./components/EditBook";
 import BookList from "./components/BookList";
 import Login from "./components/Login";
@@ -13,15 +13,15 @@ import { AuthProvider, useAuth } from "./components/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
-  
+
   if (loading) {
     return <div>Loading...</div>;
   }
-  
+
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
-  
+
   return children;
 };
 
@@ -100,21 +100,21 @@ export function App() {
             <Route path="/" element={<Home />} />
             <Route path="/book-list" element={<BookList query={query} setQuery={setQuery} category={category} setCategory={setCategory} />} />
             <Route path="/book/:id" element={<BookDetail />} />
-            <Route 
-              path="/add-book" 
+            <Route
+              path="/add-book"
               element={
                 <ProtectedRoute>
                   <AddBook />
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/edit-book/:id" 
+            <Route
+              path="/edit-book/:id"
               element={
                 <ProtectedRoute>
                   <EditBook />
                 </ProtectedRoute>
-              } 
+              }
             />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />

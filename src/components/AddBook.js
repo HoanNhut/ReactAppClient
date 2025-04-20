@@ -3,6 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { Container, Form, Button, Image } from "react-bootstrap";
 import axios from "axios";
 
+const API_URL = 'https://reactappserver-production.up.railway.app';
+
 function AddBook() {
   const navigate = useNavigate();
   const [book, setBook] = useState({
@@ -24,7 +26,7 @@ function AddBook() {
   useEffect(() => {
     const fetchBookCount = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/books/count");
+        const response = await axios.get(`${API_URL}/api/books/count`);
         setNextId(response.data.count + 1); // Tăng thêm 1 để tạo ID mới
       } catch (error) {
         console.error("Error fetching book count:", error);
@@ -95,7 +97,7 @@ function AddBook() {
     formData.append("coverImage", imageFile);
 
     try {
-      const response = await axios.post("http://localhost:5000/books", formData, {
+      const response = await axios.post(`${API_URL}/books`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       if (response.status === 201) {

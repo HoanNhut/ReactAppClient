@@ -3,6 +3,8 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { Container, Form, Button, Image } from "react-bootstrap";
 import axios from "axios";
 
+const API_URL = 'https://reactappserver-production.up.railway.app';
+
 function EditBook() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -25,21 +27,21 @@ function EditBook() {
       try {
         setLoading(true);
         // Use the correct endpoint that matches your server.js
-        const response = await axios.get(`http://localhost:5000/books/${id}`);
+        const response = await axios.get(`${API_URL}/books/${id}`);
         const bookData = response.data;
-        
+
         // Format the date if it exists
         if (bookData.publishedDate) {
           const date = new Date(bookData.publishedDate);
           bookData.publishedDate = date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
         }
-        
+
         setBook(bookData);
         // Set image preview if it exists
-        setImagePreview(bookData.coverImage?.startsWith('http') 
-          ? bookData.coverImage 
-          : `http://localhost:5000${bookData.coverImage}`);
-          
+        setImagePreview(bookData.coverImage?.startsWith('http')
+          ? bookData.coverImage
+          : `${API_URL}${bookData.coverImage}`);
+
         setLoading(false);
       } catch (error) {
         console.error("Error fetching book:", error);
@@ -47,7 +49,7 @@ function EditBook() {
         setLoading(false);
       }
     };
-    
+
     if (id) {
       fetchBook();
     }
@@ -77,31 +79,31 @@ function EditBook() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-  
+
     try {
       const formData = new FormData();
-      
+
       // Loại bỏ các trường null/undefined và chuyển đổi giá trị thành string
       Object.keys(book).forEach((key) => {
         if (book[key] != null) {
           formData.append(key, String(book[key]));
         }
       });
-      
+
       if (imageFile) {
         formData.append("coverImage", imageFile);
       }
-  
+
       const response = await axios.put(
-        `http://localhost:5000/books/${id}`,
+        `${API_URL}/books/${id}`,
         formData,
         {
-          headers: { 
+          headers: {
             'Content-Type': 'multipart/form-data'
           }
         }
       );
-  
+
       if (response.status === 200) {
         showNotification("Cập nhật sách thành công!");
         navigate("/book-list");
@@ -109,7 +111,7 @@ function EditBook() {
     } catch (error) {
       console.error("Error updating book:", error);
       showNotification(
-        error.response?.data?.message || "Lỗi khi cập nhật sách!", 
+        error.response?.data?.message || "Lỗi khi cập nhật sách!",
         "error"
       );
     } finally {

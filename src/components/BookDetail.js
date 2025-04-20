@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import axios from "axios";
 
+const API_URL = 'https://reactappserver-production.up.railway.app';
+
 export function BookDetail() {
   const { id } = useParams();
   const [book, setBook] = useState(null);
@@ -10,7 +12,7 @@ export function BookDetail() {
   useEffect(() => {
     const fetchBook = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/books/${id}`);
+        const response = await axios.get(`${API_URL}/books/${id}`);
         setBook(response.data);
       } catch (error) {
         console.error("Error fetching book:", error);
@@ -29,7 +31,9 @@ export function BookDetail() {
     );
   }
 
-  const imageUrl = book.coverImage?.startsWith('http') ? book.coverImage : `http://localhost:5000${book.coverImage}`;
+  const imageUrl = book.coverImage?.startsWith('http')
+    ? book.coverImage
+    : `${API_URL}${book.coverImage}`;
 
   return (
     <Container className="mt-5">

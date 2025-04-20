@@ -4,6 +4,8 @@ import { Container, Row, Col, Card, Button, Form, Modal } from "react-bootstrap"
 import InfiniteScroll from "react-infinite-scroll-component";
 import axios from "axios";
 
+const API_URL = 'https://reactappserver-production.up.railway.app';
+
 function BookList({ query, setQuery, category, setCategory }) {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
@@ -15,7 +17,7 @@ function BookList({ query, setQuery, category, setCategory }) {
   // Hàm lấy sách từ API
   const fetchBooks = async (pageNum = 1, append = false) => {
     try {
-      const response = await axios.get(`http://localhost:5000/books?page=${pageNum}&limit=10`);
+      const response = await axios.get(`${API_URL}/books?page=${pageNum}&limit=10`);
       const newBooks = response.data;
       setItems(prev => append ? [...prev, ...newBooks] : newBooks);
       setHasMore(newBooks.length === 10); // Nếu trả về ít hơn 10, không còn dữ liệu
@@ -45,7 +47,7 @@ function BookList({ query, setQuery, category, setCategory }) {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5000/books/${deleteBookId}`);
+      await axios.delete(`${API_URL}/books/${deleteBookId}`);
       setItems(items.filter((book) => book._id !== deleteBookId));
       setShowDeleteModal(false);
       alert("Sách đã được xóa thành công!");
@@ -97,9 +99,9 @@ function BookList({ query, setQuery, category, setCategory }) {
               <Col key={book._id} md={3}>
                 <Card className="shadow-lg border-0 rounded-4" style={{ backgroundColor: "#fffaf9" }}>
                   <Card.Img
-                    src={book.coverImage?.startsWith('http') 
-                      ? book.coverImage 
-                      : `http://localhost:5000${book.coverImage}`}
+                    src={book.coverImage?.startsWith('http')
+                      ? book.coverImage
+                      : `${API_URL}${book.coverImage}`}
                     alt={book.title}
                     className="w-100 object-cover rounded-top-4"
                     style={{ height: "240px", objectFit: "cover" }}
